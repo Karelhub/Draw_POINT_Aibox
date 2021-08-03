@@ -1,0 +1,151 @@
+<html>
+    <head>
+        <style type='text/css'>
+            html, body{
+                background-color: #c3c3c3;
+            }
+            .canvas-container{
+                margin-left:auto;
+                margin-right: auto;
+                height: 450px;
+                width: 800px;
+                padding: 0 !important;
+                background-color: #00c2;
+            }
+            canvas{
+                height: 720px;
+                width: 1280px;
+                border: 1px solid black;
+                padding: 0 !important;
+                margin: 0 !important;
+                background-image: url('aibox.png');
+            }
+        </style>
+
+        
+
+
+    </head>
+    <body>
+            <canvas onClick={elo(event)} ref='canvas_canvas' width='1280' height="720"></canvas>
+        <div><h1 id='coordinates-x'></h1></div>
+        <div><h1 id='coordinates-y'></h1></div>
+        
+        <script>
+
+            async function elo(event){
+                
+                //var my_data = [
+                //    {'x': 0, 'y': 0},
+                //    {'x': 0.56125, 'y': 0},
+                //    {'x': 0.56125, 'y': 1},
+                //    {'x': 0, 'y': 1}
+                //]
+
+                //var my_data = [
+                //    {'x': 0.63625, 'y': 0.202222},
+                //    {'x': 0.73, 'y': 0.202222},
+                //    {'x': 0.73, 'y': 0.553333},
+                //    {'x': 0.63625, 'y': 0.553333}
+                //]
+
+                //var my_data = [
+                //    {x: 0.375, y: 0.211111},
+                //    {x: 0.57, y: 0.211111},
+                //    {x: 0.57, y: 0.835556},
+                //    {x: 0.375, y: 0.835556}
+                //]
+
+                var my_data = [
+                {x: 0.27875, y: 0.484444},
+                {x: 0.4825, y: 0.484444},
+                {x: 0.4825, y: 0.633333},
+                {x: 0.37875, y: 0.633333}
+                ]
+                
+                await fetch('http://127.0.0.1:8000/api/view_test')
+                .then(response => response.json())
+                .then(data => {
+                    my_data[0].x = data[6]['x_1']
+                    my_data[0].y = data[6]['y_1']
+                    my_data[1].x = data[6]['x_2']
+                    my_data[1].y = data[6]['y_2']
+                    my_data[2].x = data[6]['x_3']
+                    my_data[2].y = data[6]['y_3']
+                    my_data[3].x = data[6]['x_4']
+                    my_data[3].y = data[6]['y_4']
+
+                })
+                
+                
+                
+
+                console.log(my_data)
+
+                my_data[0].x
+                var canvas = document.querySelector('canvas');
+                var width =  canvas.width;
+                var height = canvas.height
+                var x = (event.clientX/width);
+                var y = event.clientY/height;
+                
+
+                calc_A_x = my_data[0].x*width
+                calc_A_y = my_data[0].y*height
+
+                calc_B_x = my_data[1].x*width
+                calc_B_y = my_data[1].y*height
+
+                calc_C_x = my_data[2].x*width
+                calc_C_y = my_data[2].y*height
+
+                calc_D_x = my_data[3].x*width
+                calc_D_y = my_data[3].y*height
+
+                c = canvas.getContext('2d');
+                c.lineWidth = 5;
+                c.strokeStyle = 'orange';
+                c.moveTo(calc_A_x, calc_A_y)
+                c.lineTo(calc_B_x, calc_B_y)
+
+                c.lineTo(calc_C_x, calc_C_y)
+                c.lineTo(calc_D_x, calc_D_y)
+                c.lineTo(calc_A_x, calc_A_y)
+
+                c.stroke()
+                c.lineWidth = 7;
+                c.strokeStyle = 'blue';
+                c.beginPath();
+                c.arc(calc_A_x, calc_A_y, 10, 0, 2*Math.PI, false);
+                c.stroke();
+
+                c.beginPath();
+                c.arc(calc_B_x, calc_B_y, 10, 0, 2*Math.PI, false);
+                c.stroke();
+
+                c.beginPath();
+                c.arc(calc_C_x, calc_C_y, 10, 0, 2*Math.PI, false);
+                c.stroke();
+
+                c.beginPath();
+                c.arc(calc_D_x, calc_D_y, 10, 0, 2*Math.PI, false);
+                c.stroke();
+
+                
+                
+                c.arc(calc_D_x, calc_D_y, 10, 0, 2*Math.PI, false);
+                //c.fillRect(width*x-20, height*y-20, 20, 20)
+                //c.fillRect()
+                
+                text_x = document.getElementById('coordinates-x');
+                text_x.innerHTML="X:" + Math.floor(x*1000)/1000
+
+                text_y = document.getElementById('coordinates-y');
+                text_y.innerHTML="Y:" + Math.floor(y*1000)/1000
+            }
+
+           
+        </script>
+
+    </body>
+</html>
